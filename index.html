@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BTC/USD Prices</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div id="app" class="max-w-[1000px] mx-auto">
+      <h1 class="font-bold text-3xl text-center text-blue-600 my-4">
+        Cryptocurrency Data
+      </h1>
+    </div>
+    <script>
+     
+     const table = (content) => `<table class="table-auto w-full">${content}</table>`
+
+      const row = (k, v, i) => {
+        // complete tr string
+        return `<tr>
+            <td class="w-16 p-2 align-top border-b ${i===0 && ' border-t'} border-gray-200"><img class="h-20 w-20" src="${v['image']}" /></td>
+            <td class="w-16 p-2 align-top border-b ${i===0 && ' border-t'} border-gray-200"><p>${k}</p></td>
+            <td class="w-16 p-2 align-top border-b ${i===0 && ' border-t'} border-gray-200"><a href="${v['website']}" class="no-underline text-blue-600">${v['name']}</a></td>
+            <td class="w-16 p-2 align-top border-b ${i===0 && ' border-t'} border-gray-200"><p>${v['summary']}</p></td>
+            </tr>\n`
+      }
+
+
+      const createTable = (data) => {
+        let processedData = "";
+        // create table string and insert it into "app" div before end
+        // this will return each line as an individual String
+        let currentIndex = 0;
+        const coinsKeys = Object.keys(data);
+        for(const coinKey of coinsKeys){
+            processedData += row(coinKey, data[coinKey], currentIndex);
+            currentIndex += 1;
+        }
+        //let rows = processedData.map((wordsArray,currentLineIndex) => row(wordsArray,currentLineIndex)).join("");        
+        document.getElementById("app").insertAdjacentHTML("beforeend",table(processedData));
+      }
+
+      const url = "https://api.mtw-testnet.com/assets/all"
+      fetch(url)
+        .then((response) => {
+          //console.log(response.json());
+          return response.json()
+        })
+        .then((v) => createTable(v))
+        .catch((err) => console.log(err))
+    </script>
+    <script src="https://morethanwallet.com/appstore/index.js"></script>
+  </body>
+</html>
